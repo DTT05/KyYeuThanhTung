@@ -45,13 +45,16 @@
         .countdown-item { background: #1a5276; color: white; padding: 8px; border-radius: 12px; min-width: 65px; }
         .countdown-number { display: block; font-size: 1.1rem; font-weight: bold; }
         .countdown-label { font-size: 0.6rem; text-transform: uppercase; }
-        .control-panel {
+
+        /* BẢNG ĐIỀU KHIỂN SẼ ẨN KHI GỬI LINK */
+        #adminPanel {
             background: white; padding: 15px; border-radius: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column;
             gap: 10px; width: 420px; margin-top: 20px; z-index: 20;
         }
-        input { padding: 10px; border: 1px solid #ddd; border-radius: 10px; text-align: center; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 10px; text-align: center; font-family: inherit; }
         button.action-btn { background: #1a5276; color: white; padding: 10px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+
         .btn-box {
             width: 420px; background: #1a5276; color: white; padding: 18px;
             border-radius: 20px; text-align: center; cursor: pointer;
@@ -88,10 +91,11 @@
         </div>
         <div class="btn-box" onclick="toggleFlip()" id="btnText">Chi tiết buổi lễ</div>
     </div>
-    <div class="control-panel">
-        <input type="text" id="nameInput" placeholder="Nhập tên người nhận...">
-        <button class="action-btn" onclick="updateName()">Đổi tên xem thử</button>
-        <button class="action-btn" style="background: #2c3e50;" onclick="shareLink()">Tạo link gửi cho bạn bè</button>
+
+    <div id="adminPanel">
+        <input type="text" id="nameInput" placeholder="Nhập tên khách mời...">
+        <button class="action-btn" onclick="updateName()">Xem thử tên</button>
+        <button class="action-btn" style="background: #2c3e50;" onclick="shareLink()">Tạo link gửi cho khách</button>
         <p id="msg" style="font-size: 0.8rem; color: green; text-align: center;"></p>
     </div>
 
@@ -124,24 +128,28 @@
 
         function shareLink() {
             const name = document.getElementById('nameInput').value.trim();
-            if(!name) { alert("Hãy nhập tên trước nhé!"); return; }
+            if(!name) { alert("Hãy nhập tên khách mời!"); return; }
             const url = new URL(window.location.href);
+            // Quan trọng: Phải luôn có index.html để tránh lỗi 404 trên GitHub
+            if (!url.pathname.endsWith('index.html')) {
+                url.pathname += (url.pathname.endsWith('/') ? '' : '/') + 'index.html';
+            }
             url.searchParams.set('n', name);
             navigator.clipboard.writeText(url.href);
-            document.getElementById('msg').innerText = "Đã copy link! Gửi ngay cho " + name;
+            document.getElementById('msg').innerText = "Đã copy link gửi cho " + name + "!";
         }
 
-        // ĐOẠN QUAN TRỌNG: Tự lấy tên từ link ?n=...
-        function loadNameFromUrl() {
+        // TỰ ĐỘNG ẨN BẢNG ĐIỀU KHIỂN NẾU LÀ KHÁCH MỜI
+        function checkGuestMode() {
             const params = new URLSearchParams(window.location.search);
-            const name = params.get('n'); // Lấy giá trị sau dấu ?n=
+            const name = params.get('n');
             if(name) {
-                const decodedName = decodeURIComponent(name);
-                document.getElementById('displayName').innerText = "Dear " + decodedName;
-                document.getElementById('nameInput').value = decodedName;
+                // Nếu có tên trong link -> Ẩn bảng sửa
+                document.getElementById('adminPanel').style.display = 'none';
+                document.getElementById('displayName').innerText = "Dear " + decodeURIComponent(name);
             }
         }
-        loadNameFromUrl();
+        checkGuestMode();
 
         const target = new Date("Jan 18, 2026 11:00:00").getTime();
         setInterval(() => {
