@@ -16,7 +16,7 @@
             flex-direction: column;
             align-items: center;
             font-family: 'Quicksand', sans-serif;
-            padding: 50px 0;
+            padding: 40px 0;
         }
 
         .snowflake {
@@ -28,12 +28,14 @@
         .wrapper {
             display: flex; flex-direction: column; align-items: center;
             gap: 20px; z-index: 10; perspective: 1000px;
+            width: 100%;
         }
 
-        /* --- CỐ ĐỊNH CHIỀU NGANG ĐỂ CHỮ TO RÕ --- */
+        /* --- CHIỀU NGANG LINH HOẠT: ĐIỆN THOẠI 350px, LAPTOP 420px --- */
         .card-container {
-            width: 350px; /* Cố định chiều ngang để chữ không bị bóp nhỏ */
-            height: 480px; /* Chiều dọc ngắn lại hài hòa */
+            width: 92%;
+            max-width: 420px; /* Rộng hơn một chút để laptop không bị xuống dòng */
+            height: 500px; 
             position: relative;
             transition: transform 0.8s;
             transform-style: preserve-3d;
@@ -46,16 +48,15 @@
             backface-visibility: hidden;
             background: rgba(255, 255, 255, 0.98);
             border: 4px solid #1a5276; 
-            border-radius: 35px;
+            border-radius: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            text-align: center; padding: 30px;
+            text-align: center; padding: 25px;
         }
 
-        .card-back { transform: rotateY(180deg); justify-content: space-around; }
+        .card-back { transform: rotateY(180deg); justify-content: space-around; padding: 40px 20px; }
 
-        /* MŨ THẤP XUỐNG VÀ CÂN ĐỐI */
         .grad-icon {
             font-size: 75px;
             position: absolute;
@@ -64,25 +65,35 @@
             transform: translateX(-50%);
         }
 
-        h2 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #1a5276; margin-bottom: 10px; line-height: 1.1; }
-        .sub-text { color: #555; font-size: 1.1rem; margin-bottom: 15px; font-weight: 500; }
+        h2 { font-family: 'Dancing Script', cursive; font-size: 3.2rem; color: #1a5276; margin-bottom: 10px; line-height: 1; }
+        .sub-text { color: #555; font-size: 1.15rem; margin-bottom: 15px; font-weight: 500; line-height: 1.3; }
         
-        /* GẠCH NGANG DÀI HƠN */
-        .line { width: 190px; height: 3px; background-color: #1a5276; margin-bottom: 20px; border-radius: 2px; }
+        .line { width: 200px; height: 3px; background-color: #1a5276; margin-bottom: 20px; border-radius: 2px; }
 
-        /* CHỮ TÊN KHÁCH MỜI TO RÕ */
-        h1 { font-family: 'Dancing Script', cursive; color: #2c3e50; font-size: 2.5rem; font-weight: 700; }
+        /* Khóa chữ trên 1 hàng, tự nhỏ lại nếu tên quá dài */
+        h1 { 
+            font-family: 'Dancing Script', cursive; color: #2c3e50; 
+            font-size: clamp(1.8rem, 5vw, 2.6rem); 
+            font-weight: 700;
+            white-space: nowrap; 
+        }
 
-        .info-row { font-size: 1.05rem; margin-bottom: 8px; color: #333; }
-        .countdown-container { display: flex; gap: 8px; margin-top: 10px; }
-        .countdown-item { background: #1a5276; color: white; padding: 7px; border-radius: 10px; min-width: 62px; }
+        /* Thông tin mặt sau: Không bao giờ xuống dòng */
+        .info-row { 
+            font-size: 1.05rem; 
+            margin-bottom: 10px; 
+            color: #333; 
+            white-space: nowrap; 
+        }
+        
+        .countdown-container { display: flex; gap: 8px; margin-top: 5px; }
+        .countdown-item { background: #1a5276; color: white; padding: 8px; border-radius: 12px; min-width: 65px; }
         .countdown-number { display: block; font-size: 1.1rem; font-weight: bold; }
         .countdown-label { font-size: 0.6rem; }
 
-        /* BẢNG ĐIỀU KHIỂN */
         #adminPanel {
             background: white; padding: 20px; border-radius: 20px;
-            width: 350px; margin-top: 20px;
+            width: 90%; max-width: 420px; margin-top: 15px;
             display: flex; flex-direction: column; gap: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
@@ -91,9 +102,8 @@
         button.action-btn { background: #1a5276; color: white; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
         .btn-box {
-            width: 350px; background: #1a5276; color: white; padding: 18px;
+            width: 90%; max-width: 420px; background: #1a5276; color: white; padding: 18px;
             border-radius: 50px; text-align: center; cursor: pointer; font-weight: bold;
-            box-shadow: 0 10px 20px rgba(26, 82, 118, 0.3);
         }
     </style>
 </head>
@@ -115,7 +125,7 @@
                     <p class="info-row">📅 <strong>Thời gian:</strong> 11:00 - 18/01/2026</p>
                     <p class="info-row">📍 <strong>Địa điểm:</strong> THPT Ch. Lê Quý Đôn</p>
                 </div>
-                <p style="color: #1a5276; font-style: italic; font-family: 'Dancing Script'; font-size: 1.8rem;">Together we made memories</p>
+                <p style="color: #1a5276; font-style: italic; font-family: 'Dancing Script'; font-size: 2rem;">Together we made memories</p>
                 <div class="countdown-container" id="countdown">
                     <div class="countdown-item"><span id="days" class="countdown-number">00</span><span class="countdown-label">Ngày</span></div>
                     <div class="countdown-item"><span id="hours" class="countdown-number">00</span><span class="countdown-label">Giờ</span></div>
@@ -128,7 +138,7 @@
     </div>
 
     <div id="adminPanel">
-        <input type="text" id="nameInput" placeholder="Nhập tên khách mời...">
+        <input type="text" id="nameInput" placeholder="Nhập tên người nhận...">
         <button class="action-btn" onclick="updateName()">Đổi tên xem thử</button>
         <button class="action-btn" style="background: #2c3e50;" onclick="shareLink()">Tạo link cho Minh Nhật</button>
         <p id="msg" style="font-size: 0.8rem; color: green; text-align: center;"></p>
@@ -137,7 +147,7 @@
     <script>
         function createSnow() {
             const container = document.getElementById('snow-container');
-            for (let i = 0; i < 35; i++) {
+            for (let i = 0; i < 40; i++) {
                 const snow = document.createElement('div');
                 snow.className = 'snowflake';
                 snow.style.width = snow.style.height = Math.random() * 5 + 2 + 'px';
@@ -161,7 +171,7 @@
 
         function shareLink() {
             const name = document.getElementById('nameInput').value.trim();
-            if(!name) { alert("Nhập tên đã nha!"); return; }
+            if(!name) { alert("Bạn chưa nhập tên mà!"); return; }
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('index.html')) url.pathname += (url.pathname.endsWith('/') ? '' : '/') + 'index.html';
             url.searchParams.set('n', name);
