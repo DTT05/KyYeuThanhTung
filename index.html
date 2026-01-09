@@ -31,10 +31,9 @@
             width: 100%;
         }
 
-        /* --- CHIỀU NGANG LINH HOẠT: ĐIỆN THOẠI 350px, LAPTOP 420px --- */
         .card-container {
             width: 92%;
-            max-width: 420px; /* Rộng hơn một chút để laptop không bị xuống dòng */
+            max-width: 420px; 
             height: 500px; 
             position: relative;
             transition: transform 0.8s;
@@ -70,7 +69,6 @@
         
         .line { width: 200px; height: 3px; background-color: #1a5276; margin-bottom: 20px; border-radius: 2px; }
 
-        /* Khóa chữ trên 1 hàng, tự nhỏ lại nếu tên quá dài */
         h1 { 
             font-family: 'Dancing Script', cursive; color: #2c3e50; 
             font-size: clamp(1.8rem, 5vw, 2.6rem); 
@@ -78,7 +76,6 @@
             white-space: nowrap; 
         }
 
-        /* Thông tin mặt sau: Không bao giờ xuống dòng */
         .info-row { 
             font-size: 1.05rem; 
             margin-bottom: 10px; 
@@ -122,7 +119,7 @@
             <div class="card-face card-back">
                 <div>
                     <h2 style="font-size: 2.2rem; margin-bottom: 20px;">Thông tin buổi lễ</h2>
-                    <p class="info-row">📅 <strong>Thời gian:</strong> 11:00 - 18/01/2026</p>
+                    <p class="info-row">📅 <strong>Thời gian:</strong> 09:50 - 18/01/2026</p>
                     <p class="info-row">📍 <strong>Địa điểm:</strong> THPT Ch. Lê Quý Đôn</p>
                 </div>
                 <p style="color: #1a5276; font-style: italic; font-family: 'Dancing Script'; font-size: 2rem;">Together we made memories</p>
@@ -140,7 +137,7 @@
     <div id="adminPanel">
         <input type="text" id="nameInput" placeholder="Nhập tên người nhận...">
         <button class="action-btn" onclick="updateName()">Đổi tên xem thử</button>
-        <button class="action-btn" style="background: #2c3e50;" onclick="shareLink()">Tạo link cho Minh Nhật</button>
+        <button class="action-btn" style="background: #2c3e50;" onclick="shareLink()">Tạo link chia sẻ</button>
         <p id="msg" style="font-size: 0.8rem; color: green; text-align: center;"></p>
     </div>
 
@@ -173,7 +170,11 @@
             const name = document.getElementById('nameInput').value.trim();
             if(!name) { alert("Bạn chưa nhập tên mà!"); return; }
             const url = new URL(window.location.href);
-            if (!url.pathname.endsWith('index.html')) url.pathname += (url.pathname.endsWith('/') ? '' : '/') + 'index.html';
+            if (!url.pathname.endsWith('index.html') && !url.pathname.endsWith('/')) {
+                url.pathname += '/index.html';
+            } else if (url.pathname.endsWith('/')) {
+                url.pathname += 'index.html';
+            }
             url.searchParams.set('n', name);
             navigator.clipboard.writeText(url.href);
             document.getElementById('msg').innerText = "Đã copy link! Gửi ngay cho bạn bè.";
@@ -186,15 +187,19 @@
             document.getElementById('displayName').innerText = "Dear " + decodeURIComponent(n);
         }
 
-        const target = new Date("Jan 18, 2026 11:00:00").getTime();
+        // CẬP NHẬT LOGIC ĐẾM NGƯỢC: 09:50 AM
+        const target = new Date("Jan 18, 2026 09:50:00").getTime();
         setInterval(() => {
             const now = new Date().getTime();
             const diff = target - now;
-            if (diff <= 0) return;
-            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById("mins").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById("secs").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            if (diff <= 0) {
+                document.getElementById("countdown").innerHTML = "Sự kiện đang diễn ra!";
+                return;
+            }
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("mins").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("secs").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
         }, 1000);
     </script>
 </body>
